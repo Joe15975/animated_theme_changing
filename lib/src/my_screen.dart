@@ -1,4 +1,4 @@
-import 'package:animated_theme_changing/widgets/widget_theme_switcher.dart';
+import 'package:animated_theme_changing/src/widgets/widget_theme_switcher.dart';
 import 'package:flutter/material.dart';
 
 import 'main.dart';

@@ -1,5 +1,6 @@
-import 'package:animated_theme_changing/my_screen.dart';
 import 'package:flutter/material.dart';
+
+import 'my_screen.dart';
 
 ValueNotifier<bool> isDarkMode = ValueNotifier<bool>(false);
 
