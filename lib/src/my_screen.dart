@@ -46,6 +46,7 @@ class _MyScreenState extends State<MyScreen> {
           ],
         ),
       ),
+      isDarkMode: isDarkMode,
     );
   }
   

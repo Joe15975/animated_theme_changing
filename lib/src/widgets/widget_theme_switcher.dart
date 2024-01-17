@@ -1,19 +1,19 @@
 
 import 'package:flutter/material.dart';
 
-import '../main.dart';
-
 class AnimatedThemeChangerScaffold extends StatefulWidget {
 
   final AppBar? appBar;
   final Widget? body;
   final FloatingActionButton? floatingActionButton;
+  final ValueNotifier<bool> isDarkMode;
 
   const AnimatedThemeChangerScaffold({
     super.key,
     this.appBar,
     this.body,
     this.floatingActionButton,
+    required this.isDarkMode,
   });
 
   @override
@@ -33,8 +33,8 @@ class _AnimatedThemeChangerScaffoldState extends State<AnimatedThemeChangerScaff
 
     initAnimation();
     // listen for isDarkMode changes
-    isDarkMode.addListener(() {
-      if (isDarkMode.value) {
+    widget.isDarkMode.addListener(() {
+      if (widget.isDarkMode.value) {
         _animationController?.forward();
       } else {
         _animationController?.reverse();
@@ -62,9 +62,9 @@ class _AnimatedThemeChangerScaffoldState extends State<AnimatedThemeChangerScaff
     return Stack(
       children: [
         // layer 1
-        if (isDarkMode.value || isAnimating())
+        if (widget.isDarkMode.value || isAnimating())
           Theme(
-          data: darkTheme,
+          data: ThemeData.light(),
           child: Scaffold(
             appBar: widget.appBar,
             body: widget.body ?? const SizedBox.shrink(),
@@ -72,11 +72,11 @@ class _AnimatedThemeChangerScaffoldState extends State<AnimatedThemeChangerScaff
           ),
         ),
         // layer 2
-        if (!isDarkMode.value || isAnimating())
+        if (!widget.isDarkMode.value || isAnimating())
         ClipPath(
           clipper: MyClipper(radius: 2000 * (_animation.value.value), offset: _pointerOffset),
           child: Theme(
-            data: lightTheme,
+            data: ThemeData.dark(),
             child: Scaffold(
               appBar: widget.appBar,
               body: widget.body ?? const SizedBox.shrink(),
