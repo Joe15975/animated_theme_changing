@@ -25,7 +25,7 @@ class _AnimatedThemeChangerScaffoldState extends State<AnimatedThemeChangerScaff
   final Offset _pointerOffset = Offset.zero;
 
   AnimationController? _animationController;
-  Animation<double>? _animation;
+  final ValueNotifier<Animation<double>> _animation = ValueNotifier<Animation<double>>(const AlwaysStoppedAnimation<double>(0));
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _AnimatedThemeChangerScaffoldState extends State<AnimatedThemeChangerScaff
       vsync: Navigator.of(context),
       duration: const Duration(milliseconds: 500),
     );
-    _animation = Tween<double>(
+    _animation.value = Tween<double>(
       begin: 0,
       end: 1,
     ).animate(_animationController!);
@@ -62,7 +62,8 @@ class _AnimatedThemeChangerScaffoldState extends State<AnimatedThemeChangerScaff
     return Stack(
       children: [
         // layer 1
-        Theme(
+        if (isDarkMode.value || isAnimating())
+          Theme(
           data: darkTheme,
           child: Scaffold(
             appBar: widget.appBar,
@@ -71,8 +72,9 @@ class _AnimatedThemeChangerScaffoldState extends State<AnimatedThemeChangerScaff
           ),
         ),
         // layer 2
+        if (!isDarkMode.value || isAnimating())
         ClipPath(
-          clipper: MyClipper(radius: 2000 * (_animation?.value ?? 1), offset: _pointerOffset),
+          clipper: MyClipper(radius: 2000 * (_animation.value.value), offset: _pointerOffset),
           child: Theme(
             data: lightTheme,
             child: Scaffold(
@@ -84,6 +86,10 @@ class _AnimatedThemeChangerScaffoldState extends State<AnimatedThemeChangerScaff
         ),
       ],
     );
+  }
+
+  bool isAnimating() {
+    return _animationController?.isAnimating ?? false;
   }
 }
 
